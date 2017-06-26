@@ -6,15 +6,6 @@ import android.os.Parcelable
 private val doElseStub: () -> Unit = {}
 
 /**
- * Based on a given [predicate], execute one of the given functions [doIf] or [doElse].
- */
-fun wonder(predicate: () -> Boolean,
-           doIf: () -> Unit,
-           doElse: () -> Unit = doElseStub) {
-    predicate.invoke().wonder(doIf, doElse)
-}
-
-/**
  * Return true if the current object is null.
  */
 fun <T : Any?> T.isNull(): Boolean = this == null
@@ -22,8 +13,17 @@ fun <T : Any?> T.isNull(): Boolean = this == null
 /**
  * Execute the given [block] if the current object is null.
  */
-inline fun <T> T.letIfNull(crossinline block: (T?) -> Unit) = {
-    if (this == null) block(this)
+inline fun <T> T.letIfNull(crossinline block: () -> Unit) = {
+    if (this == null) block()
+}
+
+/**
+ * Based on a given [predicate], execute one of the given functions [doIf] or [doElse].
+ */
+fun wonder(predicate: () -> Boolean,
+           doIf: () -> Unit,
+           doElse: () -> Unit = doElseStub) {
+    predicate.invoke().wonder(doIf, doElse)
 }
 
 /**
